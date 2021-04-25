@@ -1,8 +1,3 @@
-// Copyright © 2016 Alan A. A. Donovan & Brian W. Kernighan.
-// License: https://creativecommons.org/licenses/by-nc-sa/4.0/
-
-// See page 21.
-
 // Server3 is an "echo" server that displays request parameters.
 package main
 
@@ -19,12 +14,18 @@ import (
 func main() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/gendata", gendataHandler)
+	http.HandleFunc("/url", urlHandler)
+
 
 	// for local testing
 	//log.Fatal(http.ListenAndServe("localhost:8000", nil))
 	// for web server
-	log.Fatal(http.ListenAndServe("0.0.0.0:8000", nil))
+
+	// Listens on port 0.0.0.0:8000 and checks
+	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	//log.Fatal(http.ListenAndServe("0.0.0.0:8000", nil))
 }
+
 
 //!+handler
 // handler echoes the HTTP request.
@@ -63,6 +64,7 @@ func randSeq(n int) string {
 
 //!+gendataHandler
 func gendataHandler(w http.ResponseWriter, r *http.Request) {
+
 	rand.Seed(time.Now().UnixNano())
 	queriesArray, received := r.URL.Query()["numBytes"]
 
@@ -75,3 +77,33 @@ func gendataHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 //!-gendataHandler
+
+// We get sent URL and a list of trackers, 
+// What type of data are we getting sent? 
+// .r.url.query numbytes.
+// http://localhost:8000/=10
+// dcIJ!V1Lef
+
+// Take the HTTP request from the extension
+// Parse it to get the URL, trackers
+// Session cookie
+// Struct to store the url and trackers.
+// Have a list of trackers, append to it 
+
+func urlHandler(w http.ResponseWriter, r *http.Request) {
+
+	rand.Seed(time.Now().UnixNano())
+	queriesArray, received := r.URL.Query()["url"]
+
+	numBytesString := queriesArray[0]
+	numBytes, err:= strconv.Atoi(numBytesString)
+	if !received || len(queriesArray[0]) < 1 || err != nil {
+		numBytes = 1
+	}
+	fmt.Fprintf(w, "%s", randSeq(numBytes))
+
+	
+
+}
+
+// 
