@@ -9,7 +9,54 @@ import (
 	"time"
 	"strconv"
 	"bytes"
+	"strings"
 )
+
+
+// Struct for URL and trackers
+type urlTrackerStruct struct {
+	URL string
+	Trackers [] string
+}
+
+// Parse the HTTP request to get out the URL and the trackers
+func parseURLAndTrackers (httpRequest string) urlTrackerStruct {
+	// To populate and return
+	completedStruct := urlTrackerStruct{}
+	var extractedURL string
+	var extractedTrackers [] string
+	// Start by parsing up to the first 
+	forwardSlash := "/"
+	for strings.Contains(httpRequest, forwardSlash) {
+		slashIndex := strings.Index(httpRequest, forwardSlash)
+		extractedURL = httpRequest[slashIndex:]
+		break
+	}
+	// Parse the trackers, how do they come in? After/until what character?
+
+
+	completedStruct.URL = extractedURL
+	completedStruct.Trackers = extractedTrackers
+	return completedStruct
+}
+/*
+// Extract content type from mime.types file
+func (hs *HttpServer) parseURI(requestHeader *HttpRequestHeader, conn net.Conn, uri string) (result string) {
+	// pars the .html part off
+	dotChar := "."
+	// Parse file extension
+	for strings.Contains(uri, dotChar) {
+		dotIndex := strings.Index(uri, dotChar)
+		result = uri[dotIndex:]
+		break
+	}
+	// Here result = .extension, look it up in mime map
+	result = hs.MIMEMap[result]
+	return result
+}
+*/
+
+
 
 func main() {
 	http.HandleFunc("/", handler)
